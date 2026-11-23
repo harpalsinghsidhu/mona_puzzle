@@ -84,7 +84,11 @@ def load_art():
     if os.path.exists(IMAGE_PATH):
         try:
             t = CoreImage(IMAGE_PATH).texture
-            buf, w, h = bytearray(t.pixels), t.width, t.height
+            w, h = t.width, t.height
+            raw = bytearray(t.pixels)
+            row = w * 4
+            rows = [raw[i:i + row] for i in range(0, len(raw), row)]
+            buf = bytearray(b"".join(reversed(rows)))   # flip upside down
         except Exception:
             buf = None
     if buf is None:
